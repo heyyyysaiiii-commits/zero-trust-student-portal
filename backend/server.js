@@ -21,6 +21,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Serve the built React frontend and its static assets.
+app.use(express.static(path.join(__dirname, "../public")));
+
 // ===============================
 // Serverless-safe MongoDB connection
 // ===============================
@@ -73,10 +76,8 @@ app.use("/api", async (req, res, next) => {
   }
 });
 
-// ===============================
-// Test Route
-// ===============================
-app.get("/", (req, res) => {
+// Backend health check. The "/" route is served by the React frontend.
+app.get("/health", (req, res) => {
   res.send("Zero Trust Student Portal Backend is running!");
 });
 

@@ -1,0 +1,21 @@
+# Dependencies and build output
+node_modules/
+**/node_modules/
+public/
+frontend/dist/
+
+# Secrets and local environment
+.env
+.env.*
+backend/.env
+!.env.example
+
+# Vercel and editor files
+.vercel/
+.DS_Store
+.vscode/
+.idea/
+
+# Logs
+*.log
+npm-debug.log*

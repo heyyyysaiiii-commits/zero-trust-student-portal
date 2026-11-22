@@ -1,69 +1,76 @@
-# Zero Trust Student Portal — Vercel deployment package
+# Zero Trust Student Portal
 
-This package keeps the original React UI, CSS, page flow, Express routes, JWT login, MongoDB model, and Zero Trust profile middleware. Only deployment wiring was changed:
+A Vite + React prototype demonstrating the student access flow described in the supplied internship report:
 
-- The React/Vite build is emitted to the repository-root `public/` folder for Vercel's static CDN.
-- The existing Express application is exported through the root `server.js` entry point for Vercel's Express runtime.
-- The frontend calls the same-origin `/api` path instead of `http://localhost:5000`; Vite proxies `/api` to the local backend during development.
-- MongoDB connections are cached and awaited before API requests, which is suitable for serverless invocations.
-- `bcryptjs` is used instead of the native `bcrypt` package. It uses the bcrypt hash format and remains compatible with existing bcrypt password hashes.
-- The uploaded `.env` file and all `node_modules` directories were excluded. No credentials are embedded in this package.
+**Student Login -> Security Verification -> Identity Verification -> Device Verification -> Risk Assessment -> Grant Secure Access -> Student Dashboard**
 
-## Deploy to Vercel
+## Demo account
 
-1. Upload the **contents** of this folder to a new Git repository (the root `package.json`, root `server.js`, and `vercel.json` must be at the repository root).
-2. Import that repository into Vercel.
-3. Use the repository root as the Vercel Root Directory.
-4. Framework preset: **Express** (also pinned in `vercel.json`).
-5. Build Command: `npm run build` (also pinned in `vercel.json`).
-6. Do not set a separate Output Directory. The Vite build writes static files to root `public/`, which Vercel serves through its CDN for Express projects.
-7. Add the following Vercel Environment Variables for Production (and Preview if needed):
-   - `MONGO_URI` — your MongoDB Atlas connection string.
-   - `JWT_SECRET` — a long, random secret used to sign JWTs.
-8. Redeploy after adding/changing environment variables.
+- Student ID: `STU001`
+- Password: `Rahul123`
 
-The app's existing API routes are served by the Express function:
+The sample account is provided for academic evaluation. The password is checked in the browser because the report describes the current implementation as a frontend prototype and identifies real backend authentication, authorization, dynamic risk evaluation and security logging as future-development work. **Do not use this demo authentication design for real student records or production access control.** The credential is visible in the client source/bundle.
 
-- `POST /api/users`
-- `POST /api/login`
-- `GET /api/profile`
+## Features represented from the report
 
-## Local development
+- Student login screen.
+- Security verification screen with identity, device and risk checks.
+- Prototype risk score of **15 / 100 (Low Risk)**.
+- Grant Secure Access step.
+- Student dashboard with Academics, Attendance, Examination Marks and Notifications.
+- Back-to-dashboard navigation and Logout.
 
-Install dependencies from the repository root:
+The academic values, marks, dates and notifications are illustrative sample content copied from the report's case-study screenshots/text. They are not live college records.
+
+## Vercel deployment
+
+This repository is arranged for the existing Vercel Express project:
+
+- Root Directory: repository root
+- Framework Preset: Express (also declared in `vercel.json`)
+- Build Command: `npm run build`
+- Output Directory: leave unset
+- Install Command: `npm install`
+
+The Vite build writes the production files to root `public/`. The Express app serves that directory. No MongoDB connection string, JWT secret, or environment variables are required for this prototype.
+
+## Overlay this ZIP onto your existing repository
+
+The companion ZIP is an **overlay archive**: it has `backend/`, `frontend/`, `package.json`, `server.js`, and `vercel.json` directly at its root (no enclosing folder). Extract it into the root of your existing local repository and allow files to be overwritten. Do not delete the `.git` folder.
+
+After extraction, from the repository root run:
+
+```bash
+git status
+git add -A
+git commit -m "Align Zero Trust Student Portal with internship report prototype"
+git push origin main
+```
+
+Pushing to `main` should trigger the existing Vercel project to deploy again. Vercel installs dependencies and builds the frontend; Node/npm are not required on your local machine just to push the source.
+
+## Local development (optional)
+
+Requires Node.js 22 and npm:
 
 ```bash
 npm install
-```
-
-Create `backend/.env` using `backend/.env.example` and put in your own MongoDB connection string and JWT secret.
-
-Terminal 1 — backend:
-
-```bash
-npm run start:backend
-```
-
-Terminal 2 — frontend:
-
-```bash
 npm run dev
 ```
 
-The Vite development server proxies `/api` requests to `http://localhost:5000`.
-
-## Production build check
+For a production-style local build and Express static server:
 
 ```bash
 npm run build
+npm start
 ```
 
-This creates the production frontend in root `public/`.
+Open `http://localhost:5000`.
 
-## Important credential notice
+## Health check
 
-The source ZIP supplied for modification contained a real-looking MongoDB connection string and JWT secret in `backend/.env`. That file was deliberately not copied into this deployment package. Treat those values as exposed: rotate the MongoDB database user's password in MongoDB Atlas, generate a new JWT secret, then set the replacement values in Vercel Environment Variables. Do not commit `backend/.env`.
+After deployment, `/health` returns a small JSON status response. The site root `/` serves the React portal.
 
-## Functionality and scope
+## Scope and security limitations
 
-No React component, page content, stylesheet, iconography, page state, or existing API route was redesigned. The academics, attendance, marks, and notifications content remains exactly as in the supplied project; if those sections used hardcoded demonstration values in the original, they remain demonstration values here. Login and protected profile access continue to depend on MongoDB, a valid user record, and the configured JWT secret.
+The 15/100 score is a fixed demonstration value, matching the report. Device verification and risk assessment are represented at the prototype/interface level; the app does not read endpoint posture, calculate dynamic risk, or connect to a live identity provider. The demo login is client-side and must not be treated as real authentication. MongoDB, server-side user management, JWT authentication, dynamic risk evaluation and security logging can be added as a later development phase.

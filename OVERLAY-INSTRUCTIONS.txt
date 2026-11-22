@@ -1,0 +1,27 @@
+ZERO TRUST STUDENT PORTAL - OVERLAY ZIP
+
+This ZIP has project files at its root. Extract its contents directly into the root of your existing local repository:
+
+  ~/Projects/StudentPortal/Zero-Trust-Student-Portal-Vercel
+
+Allow existing files to be overwritten. Do NOT delete the .git folder.
+
+CachyOS extraction command (adjust the ZIP location if needed):
+
+  python3 -m zipfile -e ~/Downloads/Zero-Trust-Student-Portal-Report-Overlay.zip ~/Projects/StudentPortal/Zero-Trust-Student-Portal-Vercel
+
+Then from the repository root:
+
+  cd ~/Projects/StudentPortal/Zero-Trust-Student-Portal-Vercel
+  git status
+  git add -A
+  git commit -m "Align Zero Trust Student Portal with internship report prototype"
+  git push origin main
+
+Vercel will install dependencies and build the frontend. No npm build on your laptop is required to push to GitHub.
+
+Demo login:
+  Student ID: STU001
+  Password: Rahul123
+
+This is client-side demo authentication for the academic prototype only. It is not production-secure, and the credential is visible in the frontend source/bundle. Do not use real credentials or real student data.

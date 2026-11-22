@@ -1,20 +1,12 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
 
-// Keep the existing Vite/React setup. The build is emitted to the root
-// public/ directory so Vercel can serve it through its CDN alongside Express.
 export default defineConfig({
   plugins: [react()],
-  server: {
-    proxy: {
-      '/api': {
-        target: 'http://localhost:5000',
-        changeOrigin: true,
-      },
-    },
-  },
+  base: "/",
   build: {
-    outDir: '../public',
+    // Vercel's Express deployment serves this generated root-level directory.
+    outDir: "../public",
     emptyOutDir: true,
   },
-})
+});
